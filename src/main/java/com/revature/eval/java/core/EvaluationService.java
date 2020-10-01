@@ -1,6 +1,7 @@
 package com.revature.eval.java.core;
 
 import java.time.temporal.Temporal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,8 +16,8 @@ public class EvaluationService {
 	 */
 	public String reverse(String string) {
 		char[] reversed = new char[string.length()];
-		for (int i = reversed.length - 1, j=0; i >= 0; i--, j++) {
-			reversed[j] = string.charAt(i);
+		for (int i=0; i<string.length(); i++) {
+			reversed[string.length()-i-1] = string.charAt(i);
 		}
 		return new String(reversed);
 	}
@@ -30,8 +31,28 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String acronym(String phrase) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		
+		int acronymLength = 1;
+		char [] acronym = new char[100];
+		
+		// Sets first letter of phrase to first letter of acronym
+		acronym[0]=phrase.charAt(0);
+		
+		// Calculates acronym length, stores first letters
+		for(int i=0; i<phrase.length(); i++) {
+			if(phrase.charAt(i)==' ' || phrase.charAt(i)=='-') {
+				acronym[acronymLength] = phrase.charAt(i+1);
+				acronymLength++;
+			}
+		}
+		
+		char[] trueAcro = new char[acronymLength];
+		
+		for(int i=0; i<acronymLength; i++) {
+			if(acronym[i]!=0)
+				trueAcro[i] = Character.toUpperCase(acronym[i]);
+		}
+		return new String(trueAcro);
 	}
 
 	/**
@@ -84,18 +105,24 @@ public class EvaluationService {
 		}
 
 		public boolean isEquilateral() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			if(sideOne == sideTwo && sideTwo == sideThree)
+				return true;
+			else
+				return false;
 		}
 
 		public boolean isIsosceles() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			if(sideOne == sideTwo || sideTwo == sideThree || sideOne == sideThree)
+				return true;
+			else
+				return false;
 		}
 
 		public boolean isScalene() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			if(sideOne != sideTwo && sideTwo != sideThree && sideOne != sideThree)
+				return true;
+			else
+				return false;
 		}
 
 	}
@@ -116,8 +143,58 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getScrabbleScore(String string) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		
+		String upperString = string.toUpperCase();
+		int score = 0;
+		
+		for(int i=0; i<string.length(); i++) {
+			switch(upperString.charAt(i)) {
+			case 'A':
+			case 'E':
+			case 'I':
+			case 'O':
+			case 'U':
+			case 'L':
+			case 'N':
+			case 'R':
+			case 'S':
+			case 'T':
+				score += 1;
+				break;
+			case 'D':
+			case 'G':
+				score += 2;
+				break;
+			case 'B':
+			case 'C':
+			case 'M':
+			case 'P':
+				score += 3;
+				break;
+			case 'F':
+			case 'H':
+			case 'V':
+			case 'W':
+			case 'Y':
+				score += 4;
+				break;
+			case 'K':
+				score += 5;
+				break;
+			case 'J':
+			case 'X':
+				score += 8;
+				break;
+			case 'Q':
+			case 'Z':
+				score += 10;
+				break;
+			default:
+				System.out.println("FHBEWOFUQBEWOFUQEWBGQFGBEQF");
+			}
+			
+		}
+		return score;
 	}
 
 	/**
@@ -152,8 +229,29 @@ public class EvaluationService {
 	 * NANP-countries, only 1 is considered a valid country code.
 	 */
 	public String cleanPhoneNumber(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+
+		int counter = -1;
+		char [] finalNumber = new char[10];
+
+		for(int i = 0; i<string.length(); i++) {
+			char temp = string.charAt(i);
+			
+			if(temp >= '0' && temp <= '9') {
+				counter++;
+				if(counter>9) {
+					throw new IllegalArgumentException("Number too big!");
+				}
+				finalNumber[counter] = string.charAt(i);
+			}
+			if(temp < '0' && temp != '-' && temp != '.' && temp != ' ' && temp != '(' && temp != ')') {
+				throw new IllegalArgumentException("Invalid characters!");
+			}
+			if(temp > '9' && temp != '-' && temp != '.' && temp != ' ' && temp != '(' && temp != ')') {
+				throw new IllegalArgumentException("Invalid characters!");
+			}
+		}
+		
+		return new String(finalNumber);
 	}
 
 	/**
@@ -166,8 +264,28 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Map<String, Integer> wordCount(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		String[] strArr = string.split("[,. \n]+");
+		
+		for(int i = 0; i < strArr.length; i++) {
+			
+			String tempString = strArr[i];
+			int tempcount = 0;
+			
+			// Counts how many times a given string appears
+			for(int j = i; j < strArr.length; j++) {
+				if(tempString.equals(strArr[j])) {
+					tempcount++;
+				}
+			}
+			
+			// If not already in map
+			if(map.get(strArr[i])==null)			
+				map.put(strArr[i], tempcount);
+		}
+		
+		return map;
 	}
 
 	/**
@@ -209,7 +327,17 @@ public class EvaluationService {
 		private List<T> sortedList;
 
 		public int indexOf(T t) {
-			// TODO Write an implementation for this method declaration
+			int input = 0;
+			
+			input = Integer.parseInt(t.toString());
+			
+			int left = 0;
+			int right = sortedList.size()-1;
+			
+			while(left <= right) {
+				
+			}
+			
 			return 0;
 		}
 
@@ -246,8 +374,36 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String toPigLatin(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		
+		// Convert string sentence to string array
+		String[] strArr = string.split("[,. ]+");
+		
+		// loop through each string in the string array
+		for(int i = 0; i < strArr.length; i++) {
+			
+			String temp = strArr[i];
+			
+			// Use substrings to move letters around until they're where you want them to be
+			while(true) {
+				if(Character.isAlphabetic(temp.charAt(0)) && temp.charAt(0)!='a' && temp.charAt(0)!='e' && temp.charAt(0)!='i' && temp.charAt(0)!='o' && temp.charAt(0)!='u' && temp.charAt(0)!='q') {
+					temp = temp.substring(1) + temp.charAt(0);
+				}
+				else if(temp.charAt(0)=='q' && temp.charAt(1)=='u')
+					temp = temp.substring(2) + temp.charAt(0) + temp.charAt(1);
+				else if(temp.charAt(0)=='q' && temp.charAt(1)!='u')
+					temp = temp.substring(1) + temp.charAt(0);
+				else
+					break;
+			}
+			strArr[i] = temp + "ay";
+		}
+		
+		String full = strArr[0];
+		for(int i = 1; i < strArr.length; i++) {
+			full = full + " " + strArr[i];
+		}
+		
+		return full;
 	}
 
 	/**
